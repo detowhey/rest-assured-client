@@ -5,16 +5,14 @@ import io.restassured.filter.log.LogDetail
 import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
 
-class RequestSpecificationFactory {
+class RequestSpecificationFactory private constructor(){
 
     companion object {
         @JvmStatic
         fun of(baseURL: String): RequestSpecification {
             val spec = RequestSpecBuilder()
-            spec.setBaseUri(baseURL)
-            spec.log(LogDetail.ALL)
-            spec.addHeader("Content-Type", ContentType.JSON as String)
-            return spec.build()
+            return spec.setBaseUri(baseURL).log(LogDetail.ALL).addHeader("Content-Type", ContentType.JSON.toString())
+                .build()
         }
     }
 }
