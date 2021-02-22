@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.21'
 }
 
-group 'br.dev.henriquealmeida'
+group 'br.qa.henriquealmeida'
 version '1.0-SNAPSHOT'
 
 repositories {

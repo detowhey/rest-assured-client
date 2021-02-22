@@ -1,4 +1,4 @@
-package br.dev.henriquealmeida.rest_assured
+package br.qa.henriquealmeida.rest_assured
 
 import io.restassured.builder.RequestSpecBuilder
 import io.restassured.filter.log.LogDetail

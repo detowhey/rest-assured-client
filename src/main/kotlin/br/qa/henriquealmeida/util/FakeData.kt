@@ -1,4 +1,4 @@
-package br.dev.henriquealmeida.util
+package br.qa.henriquealmeida.util
 
 import com.github.javafaker.Faker
 import java.text.SimpleDateFormat
@@ -11,18 +11,18 @@ class FakeData private constructor() {
         private val faker = Faker(Locale("pt-br"))
 
         @JvmStatic
-        fun userName(pointOn: Boolean = false): String {
+        fun userName(dotOn: Boolean = false): String {
             val stringFormat = faker.name().username()
                 .replace("[âãàáä]".toRegex(), "a").replace("[êèéë]".toRegex(), "e")
                 .replace("[îíìï]".toRegex(), "i").replace("[ôõòóö]".toRegex(), "o")
                 .replace("[ûúùü]".toRegex(), "u")
 
-            return if (pointOn) stringFormat else stringFormat.replace(".", "_")
+            return if (dotOn) stringFormat else stringFormat.replace(".", "_")
         }
 
         @JvmStatic
         fun email(valid: Boolean = true): String {
-            return if (valid) "${this.userName(true)}@email.com" else "${this.userName(true)}.com"
+            return if (valid) "${userName(true)}@email.com" else "${userName(true)}.com"
         }
 
         @JvmStatic
@@ -35,16 +35,16 @@ class FakeData private constructor() {
         fun fullName(): String = faker.name().fullName()
 
         @JvmStatic
-        fun invalidCpf(symbolsOn: Boolean = false): String {
-            return if (symbolsOn) faker.numerify("###.###.###-##") else faker.numerify("###########")
+        fun invalidCpf(specialCharacters: Boolean = false): String {
+            return if (specialCharacters) faker.numerify("###.###.###-##") else faker.numerify("###########")
         }
 
         @JvmStatic
-        fun cellNumber(symbolsOn: Boolean = false): String {
-            return if (symbolsOn)
+        fun cellNumber(specialCharacters: Boolean = false): String {
+            return if (specialCharacters)
                 faker.phoneNumber().cellPhone()
             else
-                faker.phoneNumber().cellPhone().replace("[^0-9]+".toRegex(), "")
+                faker.phoneNumber().cellPhone().replace("[^0-9]".toRegex(), "")
         }
 
         @JvmStatic
@@ -54,10 +54,10 @@ class FakeData private constructor() {
         fun streetName(): String = faker.address().streetName()
 
         @JvmStatic
-        fun numberAdress(): String = faker.address().streetAddressNumber()
+        fun numberAdressString(): String = faker.address().streetAddressNumber()
 
         @JvmStatic
-        fun stateName(): String = faker.address().state()
+        fun stateFullName(): String = faker.address().state()
 
         @JvmStatic
         fun stateInitials(): String = faker.address().stateAbbr()
@@ -75,16 +75,16 @@ class FakeData private constructor() {
         fun randomDoubleNumber(minValue: Double = 0.0, maxValue: Double): Double = Random.nextDouble(minValue, maxValue)
 
         @JvmStatic
-        fun randomStringMoneyValue(minValue: Double = 0.0, maxValue: Double, pointOn: Boolean = false): String {
+        fun randomStringMoneyValue(minValue: Double = 0.0, maxValue: Double, dotOn: Boolean = false): String {
             var valueMoneyString = "%.2f".format(randomDoubleNumber(minValue, maxValue))
 
-            if (!pointOn)
+            if (!dotOn)
                 valueMoneyString = valueMoneyString.replace(".", ",")
             return valueMoneyString
         }
 
         @JvmStatic
-        fun validCpf(symbolsOn: Boolean): String {
+        fun validCpf(specialCharacters: Boolean): String {
             val n1 = Random.nextInt(10)
             val n2 = Random.nextInt(10)
             val n3 = Random.nextInt(10)
@@ -112,7 +112,7 @@ class FakeData private constructor() {
 
             val concatNumber = "${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}"
 
-            return if (symbolsOn) concatNumber else concatNumber.replace("[.-]".toRegex(), "")
+            return if (specialCharacters) concatNumber else concatNumber.replace("[.-]".toRegex(), "")
         }
 
         @JvmStatic
@@ -133,14 +133,17 @@ class FakeData private constructor() {
             includeDigits: Boolean = false
         ): String = faker.lorem().characters(minLength, maxLength, upperCaseOn, includeDigits)
 
+        @JvmStatic
         fun wordsLorenIpsulum(numberOfWords: Int = 1): MutableList<String> = faker.lorem().words(numberOfWords)
 
+        @JvmStatic
         fun sentenceLorenIpsulum(numberOfWords: Int = 1): String = faker.lorem().sentence(numberOfWords)
 
+        @JvmStatic
         fun fixedString(numberOfLetters: Int): String = faker.lorem().fixedString(numberOfLetters)
 
         @JvmStatic
-        fun randomTime(): String {
+        fun randomTimeString(): String {
             val simpleDateFormat = SimpleDateFormat("HH:mm")
             val date = faker.date()
             return simpleDateFormat.format(date)
