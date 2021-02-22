@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
 
-class FakeData (locale: Locale) {
+class FakeData private constructor() {
 
     companion object {
         private val faker = Faker(Locale("pt-br"))
@@ -110,13 +110,9 @@ class FakeData (locale: Locale) {
 
             d2 = if (d2 < 2) 0 else 11 - rest
 
-            val concatNumber = "${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-"
-            val nDigResult = "${d1}${d2}"
+            val concatNumber = "${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}"
 
-            return if (symbolsOn)
-                "${concatNumber}${nDigResult}"
-            else
-                "${concatNumber}${nDigResult}".replace("[.-]".toRegex(), "")
+            return if (symbolsOn) concatNumber else concatNumber.replace("[.-]".toRegex(), "")
         }
 
         @JvmStatic
