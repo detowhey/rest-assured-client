@@ -6,7 +6,6 @@ import java.util.*
 import kotlin.random.Random
 
 class FakeData private constructor() {
-
     companion object {
         private val faker = Faker(Locale("pt-br"))
 
@@ -41,10 +40,8 @@ class FakeData private constructor() {
 
         @JvmStatic
         fun cellNumber(specialCharacters: Boolean = false): String {
-            return if (specialCharacters)
-                faker.phoneNumber().cellPhone()
-            else
-                faker.phoneNumber().cellPhone().replace("[^0-9]".toRegex(), "")
+            val cellNumber = faker.phoneNumber().cellPhone()
+            return if (specialCharacters) cellNumber else cellNumber.replace("[^0-9]".toRegex(), "")
         }
 
         @JvmStatic
@@ -66,7 +63,10 @@ class FakeData private constructor() {
         fun cityName(): String = faker.address().cityName()
 
         @JvmStatic
-        fun zipCode(): String = faker.address().zipCode()
+        fun zipCode(specialCharacters: Boolean = false): String {
+            val zipCode = faker.address().zipCode()
+            return if (specialCharacters) zipCode else zipCode.replace("-", "")
+        }
 
         @JvmStatic
         fun randomIntNumber(minValue: Int = 0, maxValue: Int): Int = Random.nextInt(minValue, maxValue)

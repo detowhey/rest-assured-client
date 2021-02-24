@@ -47,8 +47,9 @@ class FakerDataTest {
     @Test
     fun `Returns a String random cellphone number with special characters`() {
         val randomCellPhoneNumber = FakeData.cellNumber(true)
+
         assertTrue {
-            randomCellPhoneNumber.contains("[.-]".toRegex())
+            randomCellPhoneNumber.contains("[().-]".toRegex())
                 .and(randomCellPhoneNumber.contains(numbersOnlyRegex()).and(randomCellPhoneNumber.length == 15))
         }
     }
@@ -71,7 +72,10 @@ class FakerDataTest {
     fun `Returns random number address String`() = assertTrue(FakeData.numberAdressString().matches(numbersOnlyRegex()))
 
     @Test
-    fun `Returns a full state name`() = assertTrue(FakeData.stateFullName().length > 2)
+    fun `Returns a full state name`() {
+        val stateName = FakeData.stateFullName()
+        assertTrue(stateName.matches(lettersAccentRegex()).and(stateName.length > 2))
+    }
 
     @Test
     fun `Returns the initials of a state`() {
@@ -79,7 +83,23 @@ class FakerDataTest {
         assertTrue(stateInitials.matches("[A-Z]+".toRegex()).and(stateInitials.length == 2))
     }
 
+    @Test
+    fun `Return a random city name String`() = assertTrue(FakeData.cityName().matches(lettersAccentRegex()))
+
+    @Test
+    fun `Return a random zipcode String with special characters`() {
+        val zipCode = FakeData.zipCode(true)
+        assertTrue(zipCode.matches("[0-9-]+".toRegex()).and(zipCode.length == 9))
+    }
+
+    @Test
+    fun `Return a random zipcode String without special characters`() {
+        val zipCode = FakeData.zipCode()
+        assertTrue(FakeData.zipCode().matches(numbersOnlyRegex()).and(zipCode.length == 8))
+    }
+
+
     private fun numbersOnlyRegex(): Regex = "[0-9]+".toRegex()
 
-    private fun lettersAccentRegex(): Regex = "[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+".toRegex()
+    private fun lettersAccentRegex(): Regex = "[A-Za-záàâãéêíóôõöúçñÁÀÂÃÉÍÇ ]+".toRegex()
 }
