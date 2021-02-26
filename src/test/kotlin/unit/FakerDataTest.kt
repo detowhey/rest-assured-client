@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test
 class FakerDataTest {
 
     @Test
-    fun `Returns a random username without a dot`() = assertFalse(FakeData.userName().contains("."))
+    fun `Returns a random username without a dot`() = assertTrue(FakeData.userName().matches("[a-z_]+".toRegex()))
 
     @Test
-    fun `Returns a random username with a dot`() = assertTrue(FakeData.userName(true).contains("."))
+    fun `Returns a random username with a dot`() = assertTrue(FakeData.userName(true).matches("[a-z.]+".toRegex()))
 
     @Test
     fun `Must contain a valid email`() = assertTrue(FakeData.email().contains("@email.com"))
@@ -47,11 +47,7 @@ class FakerDataTest {
     @Test
     fun `Returns a String random cellphone number with special characters`() {
         val randomCellPhoneNumber = FakeData.cellNumber(true)
-
-        assertTrue {
-            randomCellPhoneNumber.contains("[().-]".toRegex())
-                .and(randomCellPhoneNumber.contains(numbersOnlyRegex()).and(randomCellPhoneNumber.length == 15))
-        }
+        assertTrue(randomCellPhoneNumber.matches("[0-9() .-]+".toRegex()).and(randomCellPhoneNumber.length == 15))
     }
 
     @Test
@@ -84,22 +80,46 @@ class FakerDataTest {
     }
 
     @Test
-    fun `Return a random city name String`() = assertTrue(FakeData.cityName().matches(lettersAccentRegex()))
+    fun `Returns a random city name String`() = assertTrue(FakeData.cityName().matches(lettersAccentRegex()))
 
     @Test
-    fun `Return a random zipcode String with special characters`() {
+    fun `Returns a random zipcode String with special characters`() {
         val zipCode = FakeData.zipCode(true)
         assertTrue(zipCode.matches("[0-9-]+".toRegex()).and(zipCode.length == 9))
     }
 
     @Test
-    fun `Return a random zipcode String without special characters`() {
+    fun `Returns a random zipcode String without special characters`() {
         val zipCode = FakeData.zipCode()
         assertTrue(FakeData.zipCode().matches(numbersOnlyRegex()).and(zipCode.length == 8))
     }
 
+    @Test
+    fun `Returns a random Integer number with a max value`() =
+        assertTrue(IntRange(0, 10).contains(FakeData.randomIntNumber(maxValue = 10)))
+
+    @Test
+    fun `Returns a random Integer number with specific range`() =
+        assertTrue(IntRange(5, 50).contains(FakeData.randomIntNumber(5, 50)))
+
+    @Test
+    fun `Returns random Double number with a max value`() =
+        assertTrue((0.0..50.05).contains(FakeData.randomDoubleNumber(maxValue = 50.05)))
+
+    @Test
+    fun `Returns a random Double number with specific range`() =
+        assertTrue((5.5..50.05).contains(FakeData.randomDoubleNumber(5.5, 50.05)))
+
+    @Test
+    fun `Returns a valid CPF String without special characters`() =
+        assertTrue(FakeData.validCpf().matches(numbersOnlyRegex()))
+
+    @Test
+    fun `Returns a valid CPF String with special characters`() =
+        assertTrue(FakeData.validCpf().matches("[0-9.-]+".toRegex()))
 
     private fun numbersOnlyRegex(): Regex = "[0-9]+".toRegex()
 
     private fun lettersAccentRegex(): Regex = "[A-Za-záàâãéêíóôõöúçñÁÀÂÃÉÍÇ ]+".toRegex()
 }
+

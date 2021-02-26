@@ -84,7 +84,7 @@ class FakeData private constructor() {
         }
 
         @JvmStatic
-        fun validCpf(specialCharacters: Boolean): String {
+        fun validCpf(specialCharacters: Boolean = false): String {
             val n1 = Random.nextInt(10)
             val n2 = Random.nextInt(10)
             val n3 = Random.nextInt(10)
@@ -117,7 +117,7 @@ class FakeData private constructor() {
 
         @JvmStatic
         fun birthDayString(minAge: Int, maxAge: Int): String {
-            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
+            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val date = birthDayDate(minAge, maxAge)
             return simpleDateFormat.format(date)
         }
@@ -127,17 +127,17 @@ class FakeData private constructor() {
 
         @JvmStatic
         fun charactersLorenIpsulum(
-            minLength: Int = 1,
+            minLength: Int,
             maxLength: Int,
             upperCaseOn: Boolean = false,
             includeDigits: Boolean = false
         ): String = faker.lorem().characters(minLength, maxLength, upperCaseOn, includeDigits)
 
         @JvmStatic
-        fun wordsLorenIpsulum(numberOfWords: Int = 1): MutableList<String> = faker.lorem().words(numberOfWords)
+        fun wordsLorenIpsulum(numberOfWords: Int): MutableList<String> = faker.lorem().words(numberOfWords)
 
         @JvmStatic
-        fun sentenceLorenIpsulum(numberOfWords: Int = 1): String = faker.lorem().sentence(numberOfWords)
+        fun sentenceLorenIpsulum(numberOfWords: Int): String = faker.lorem().sentence(numberOfWords)
 
         @JvmStatic
         fun fixedString(numberOfLetters: Int): String = faker.lorem().fixedString(numberOfLetters)
