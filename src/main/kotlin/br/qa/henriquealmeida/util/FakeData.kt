@@ -134,13 +134,29 @@ class FakeData private constructor() {
         ): String = faker.lorem().characters(minLength, maxLength, upperCaseOn, includeDigits)
 
         @JvmStatic
+        fun charactersLorenIpsulumFixedNumber(
+            fixedNumberOfCharacters: Int = 1, upperCaseOn: Boolean = false,
+            includeDigits: Boolean = false
+        ): String {
+            if (fixedNumberOfCharacters < 1)
+                exceptionGeneric()
+
+            return faker.lorem().characters(fixedNumberOfCharacters, upperCaseOn, includeDigits)
+        }
+
+        @JvmStatic
         fun wordsLorenIpsulum(numberOfWords: Int): MutableList<String> = faker.lorem().words(numberOfWords)
 
         @JvmStatic
         fun sentenceLorenIpsulum(numberOfWords: Int): String = faker.lorem().sentence(numberOfWords)
 
         @JvmStatic
-        fun fixedString(numberOfLetters: Int): String = faker.lorem().fixedString(numberOfLetters)
+        fun fixedString(numberOfLetters: Int): String {
+            if (numberOfLetters < 1)
+                exceptionGeneric()
+
+            return faker.lorem().fixedString(numberOfLetters)
+        }
 
         @JvmStatic
         fun randomTimeString(): String {
@@ -148,5 +164,8 @@ class FakeData private constructor() {
             val date = faker.date()
             return simpleDateFormat.format(date)
         }
+
+        private fun exceptionGeneric(): Unit = throw Exception("The number of characters cannot be less than 1")
+
     }
 }

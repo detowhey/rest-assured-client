@@ -1,9 +1,12 @@
 package unit
 
 import br.qa.henriquealmeida.util.FakeData
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.function.Executable
 
 class FakerDataTest {
 
@@ -118,8 +121,60 @@ class FakerDataTest {
     fun `Returns a valid CPF String with special characters`() =
         assertTrue(FakeData.validCpf().matches("[0-9.-]+".toRegex()))
 
+    @Test
+    fun `Returns random characters with range, without digits and capital letters`() {
+        val characters = FakeData.charactersLorenIpsulum(10, 20)
+        assertTrue(IntRange(10, 20).contains(characters.length).and(characters.matches(lowercaseOnlyRegex())))
+    }
+
+    @Test
+    fun `Returns random characters with range, digits and without capital letters`() {
+        val characters = FakeData.charactersLorenIpsulum(10, 50, includeDigits = true)
+        assertTrue(IntRange(10, 50).contains(characters.length).and(characters.matches(lowercaseAndNumbersRegex())))
+    }
+
+    @Test
+    fun `Returns random characters with range, digits and capital letters`() {
+        val characters = FakeData.charactersLorenIpsulum(10, 30, upperCaseOn = true, includeDigits = true)
+        assertTrue(IntRange(10, 30).contains(characters.length).and(characters.matches(lettersAndNumbersRegex())))
+    }
+
+    @Test
+    fun `Returns a random String with fixed number of characters, without digits and capital letters`() {
+        val randomString = FakeData.charactersLorenIpsulumFixedNumber(10)
+        assertTrue(randomString.matches(lowercaseOnlyRegex()).and(randomString.length == 10))
+    }
+
+    @Test
+    fun `Returns a random String with fixed number of characters, digits and without capital letters`() {
+        val randomString = FakeData.charactersLorenIpsulumFixedNumber(20, includeDigits = true)
+        assertTrue(randomString.matches(lowercaseAndNumbersRegex()).and(randomString.length == 20))
+    }
+
+    @Test
+    fun `Returns a random String with fixed number of characters, digits and capital letters`() {
+        val randomString = FakeData.charactersLorenIpsulumFixedNumber(15, upperCaseOn = true, includeDigits = true)
+        assertTrue(randomString.matches(lettersAndNumbersRegex()).and(randomString.length == 15))
+    }
+
+    @Test
+    fun `Return a random String with number of letters fixed`() = assertTrue(FakeData.fixedString(20).length == 20)
+
+    @Test
+    fun `Expects an exception, with the message, The number of characters cannot be less than 1`() {
+        assertAll(
+            Executable { assertThrows(Exception::class.java) { FakeData.fixedString(-1) } },
+            Executable { assertThrows(Exception::class.java) { FakeData.charactersLorenIpsulumFixedNumber(-1) } }
+        )
+    }
+
     private fun numbersOnlyRegex(): Regex = "[0-9]+".toRegex()
 
-    private fun lettersAccentRegex(): Regex = "[A-Za-záàâãéêíóôõöúçñÁÀÂÃÉÍÇ ]+".toRegex()
-}
+    private fun lowercaseOnlyRegex() = "[a-z]+".toRegex()
 
+    private fun lowercaseAndNumbersRegex() = "[a-z0-9]+".toRegex()
+
+    private fun lettersAccentRegex(): Regex = "[A-Za-záàâãéêíóôõöúçñÁÀÂÃÉÍÇ ]+".toRegex()
+
+    private fun lettersAndNumbersRegex() = "[A-Za-z0-9]+".toRegex()
+}
