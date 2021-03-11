@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.function.Executable
 
-class FakerDataTest {
+@DisplayName("Unit tests of data provider class FakeData")
+class FakeDataTest {
 
     @Test
     fun `Returns a random username without a dot`() = assertTrue(FakeData.userName().matches("[a-z_]+".toRegex()))
@@ -117,9 +119,10 @@ class FakerDataTest {
     fun `Returns a valid CPF String without special characters`() =
         assertTrue(FakeData.validCpf().matches(numbersOnlyRegex()))
 
+
     @Test
     fun `Returns a valid CPF String with special characters`() =
-        assertTrue(FakeData.validCpf().matches("[0-9.-]+".toRegex()))
+        assertTrue(FakeData.validCpf(true).matches("[0-9.-]+".toRegex()))
 
     @Test
     fun `Returns random characters with range, without digits and capital letters`() {
@@ -163,18 +166,18 @@ class FakerDataTest {
     @Test
     fun `Expects an exception, with the message, The number of characters cannot be less than 1`() {
         assertAll(
-            Executable { assertThrows(Exception::class.java) { FakeData.fixedString(-1) } },
-            Executable { assertThrows(Exception::class.java) { FakeData.charactersLorenIpsulumFixedNumber(-1) } }
+            Executable { assertThrows(IllegalArgumentException::class.java) { FakeData.fixedString(-1) } },
+            Executable { assertThrows(IllegalArgumentException::class.java) { FakeData.charactersLorenIpsulumFixedNumber(-1) } }
         )
     }
 
     private fun numbersOnlyRegex(): Regex = "[0-9]+".toRegex()
 
-    private fun lowercaseOnlyRegex() = "[a-z]+".toRegex()
+    private fun lowercaseOnlyRegex(): Regex = "[a-z]+".toRegex()
 
-    private fun lowercaseAndNumbersRegex() = "[a-z0-9]+".toRegex()
+    private fun lowercaseAndNumbersRegex(): Regex = "[a-z0-9]+".toRegex()
 
     private fun lettersAccentRegex(): Regex = "[A-Za-záàâãéêíóôõöúçñÁÀÂÃÉÍÇ ]+".toRegex()
 
-    private fun lettersAndNumbersRegex() = "[A-Za-z0-9]+".toRegex()
+    private fun lettersAndNumbersRegex(): Regex = "[A-Za-z0-9]+".toRegex()
 }

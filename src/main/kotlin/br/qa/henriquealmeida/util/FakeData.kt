@@ -3,6 +3,7 @@ package br.qa.henriquealmeida.util
 import com.github.javafaker.Faker
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.IllegalArgumentException
 import kotlin.random.Random
 
 class FakeData private constructor() {
@@ -76,11 +77,8 @@ class FakeData private constructor() {
 
         @JvmStatic
         fun randomStringMoneyValue(minValue: Double = 0.0, maxValue: Double, dotOn: Boolean = false): String {
-            var valueMoneyString = "%.2f".format(randomDoubleNumber(minValue, maxValue))
-
-            if (!dotOn)
-                valueMoneyString = valueMoneyString.replace(".", ",")
-            return valueMoneyString
+            val valueMoneyString = "%.2f".format(randomDoubleNumber(minValue, maxValue))
+            return if (!dotOn) valueMoneyString.replace(".", ",") else valueMoneyString
         }
 
         @JvmStatic
@@ -135,11 +133,12 @@ class FakeData private constructor() {
 
         @JvmStatic
         fun charactersLorenIpsulumFixedNumber(
-            fixedNumberOfCharacters: Int = 1, upperCaseOn: Boolean = false,
+            fixedNumberOfCharacters: Int = 1,
+            upperCaseOn: Boolean = false,
             includeDigits: Boolean = false
         ): String {
             if (fixedNumberOfCharacters < 1)
-                exceptionGeneric()
+                exceptionNegativeNumberGeneric()
 
             return faker.lorem().characters(fixedNumberOfCharacters, upperCaseOn, includeDigits)
         }
@@ -153,7 +152,7 @@ class FakeData private constructor() {
         @JvmStatic
         fun fixedString(numberOfLetters: Int): String {
             if (numberOfLetters < 1)
-                exceptionGeneric()
+                exceptionNegativeNumberGeneric()
 
             return faker.lorem().fixedString(numberOfLetters)
         }
@@ -165,7 +164,7 @@ class FakeData private constructor() {
             return simpleDateFormat.format(date)
         }
 
-        private fun exceptionGeneric(): Unit = throw Exception("The number of characters cannot be less than 1")
-
+        private fun exceptionNegativeNumberGeneric(): Unit =
+            throw IllegalArgumentException("The number of characters cannot be less than 1")
     }
 }
